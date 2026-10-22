@@ -220,23 +220,6 @@ details.card summary{cursor:pointer;margin-bottom:6px}
 .qmsg{color:var(--wine);font-weight:600;margin:4px 0}
 .qnav{display:flex;gap:8px;margin-top:6px}.qnav button{flex:1;padding:14px}
 .qa{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #d6cfc2;font-size:14px}.qa span:first-child{color:#6f685e;flex:1}.qa span:last-child{text-align:right;flex:1;font-weight:600}
-
-.qd{display:flex;flex-direction:column;gap:8px}
-.qdc{display:block;text-align:left;text-transform:none;letter-spacing:0;background:#f3efe7;color:#1a1a1c;border:1px solid #cdc5b6;border-radius:10px;padding:12px 14px;font-weight:400}
-.qdc b{display:block;font-family:Archivo,sans-serif;font-stretch:88%;font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:14px;margin-bottom:3px}
-.qdc span{display:block;font-size:13px;line-height:1.45;color:#5b554c}
-.qdc.on{background:var(--wine);color:var(--white);border-color:transparent}.qdc.on span{color:#f0e6e0}
-.yf{text-align:center;margin:26px 0 8px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1)}
-.yf small{display:block;letter-spacing:.24em;text-transform:uppercase;color:var(--champ);font-weight:700;margin-bottom:10px}
-.yfl{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
-.yfl a{color:var(--white);text-decoration:none;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:9px 14px;font-size:14px;background:var(--graphite)}
-.tmd{margin-top:10px;border-top:1px solid #d6cfc2;padding-top:8px}.tmd summary{cursor:pointer;font-weight:600;font-size:14px}.tmd>small{display:block;margin:6px 0 8px}
-.tmr{background:#f3efe7;border:1px solid #d6cfc2;border-radius:8px;padding:10px;margin-top:8px}
-.tmg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:8px 0}
-.tmi video,.tmi img{width:100%;border-radius:8px;display:block;background:#000;max-height:260px;object-fit:cover}
-.tmb{display:inline-block;margin-top:6px;background:var(--graphite);color:var(--white);border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:none;cursor:pointer}
-.tmr textarea{margin-top:8px;min-height:60px}
-.tmf{margin-top:8px;background:#efe3cb;border-left:3px solid var(--wine);border-radius:6px;padding:8px 10px;font-size:14px}
 </style>
 </head>
 <body>
@@ -368,7 +351,6 @@ return `<div class="card"><div class="row"><b>${esc(t.n)}</b><small>${t.k==="w"?
 ${L.length?`<div class="sum"><span>Último <b>${fmtU(ms[ms.length-1],t.u)}</b></span><span>Mejor <b>${fmtU(best,t.u)}</b></span>${ms.length>1?`<span>Δ ${r1(ms[ms.length-1]-ms[ms.length-2])}</span>`:""}</div>`:""}
 ${L.length>1?lc(L.map((e,i)=>({l:e.d.slice(2),v:ms[i]}))):""}
 <div class="grid" style="grid-template-columns:1fr ${t.k==="w"?"1fr ":""}1fr auto;align-items:end"><div><label>${t.k==="t"?"Tiempo (mm:ss)":"Valor"}</label><input data-tv="${t.id}" ${t.k==="t"?'placeholder="22:30"':'type="number" step="any"'}></div>${t.k==="w"?`<div><label>Reps</label><input data-tr="${t.id}" type="number" value="1"></div>`:""}<div><label>Fecha</label><input data-td="${t.id}" type="date" value="${today}"></div><button class="on" data-act="addT" data-v="${t.id}">Guardar</button></div>
-${tmH(t,L,ms)}
 ${L.length&&!CLI()?`<button class="x" data-act="undoT" data-v="${t.id}">Borrar último registro</button>`:""}</div>`}
 function tstH(){const nt='<div class="card"><small>Índice YD = (tu valor − base) ÷ (élite − base) × 100, limitado a 0-100. Las referencias son orientativas (hombres entrenados) y se pueden ajustar en cada test. En fuerza se usa tu 1RM estimado ÷ peso corporal.</small></div>';const all=TC.concat((S.ct||[]).map(c=>({id:c.id,p:c.p,n:c.n,u:c.u,dir:"max",k:"n"})));
 return nt+TP.map(p=>`<div class="sec">${p}</div>`+all.filter(t=>t.p===p).map(tstCard).join("")+`<button data-act="addCT" data-v="${p}" style="margin-bottom:6px">+ Añadir test a ${p}</button>`).join("")}
@@ -636,18 +618,6 @@ const QS=[
 {i:"padel",k:"c",q:"¿Qué nivel de pádel tienes?",o:["Iniciación","Intermedio","Avanzado","Competición"],w:a=>(a.dep||[]).includes("Pádel")},
 {i:"part",k:"c",q:"¿Cuántas veces a la semana juegas o entrenas tu deporte?",o:["0","1","2","3 o más"],w:a=>(a.dep||[]).some(x=>x==="Pádel"||x==="Fútbol")},
 {i:"gusto",k:"x",q:"¿Qué tipo de entrenamiento te encanta y cuál no soportas?",p:"Ej.: me gusta la fuerza, odio correr…"}]},
-{e:"🏋️",t:"Tu",s:"estilo",d:"Elige hasta 3 estilos en los que te gustaría que nos enfocáramos.",q:[
-{i:"tipo",k:"d",q:"¿Qué tipo de entrenamiento te gustaría? (máximo 3)",r:1,o:[
-["CrossFit","Mezcla de halterofilia, gimnásticos y cardio en entrenos variados e intensos. Condición física general y mucha variedad."],
-["Hyrox","Carrera fitness: 8 km corriendo con 8 estaciones funcionales (trineo, remo, wall balls…). Resistencia y fuerza combinadas."],
-["Funcional","Movimientos naturales (empujar, tirar, saltar, rotar) para moverte mejor y prevenir lesiones en el día a día y en el deporte."],
-["Culturismo","Entrenamiento de hipertrofia: volumen, series cerca del fallo y técnica para ganar músculo y mejorar tu físico."],
-["Powerlifting","Fuerza máxima en sentadilla, press banca y peso muerto, con cargas altas y pocas repeticiones."],
-["Calistenia","Entrenar con tu propio peso: dominadas, fondos, flexiones y habilidades como el muscle-up o el pino."],
-["Máquinas","Ejercicios guiados que dan seguridad y permiten aislar cada músculo. Ideales para empezar o para ir al límite con control."],
-["Peso libre","Mancuernas, barras y kettlebells: más coordinación y estabilidad, y mayor transferencia a la vida real y al deporte."],
-["No lo sé, aconséjame","Yo te propongo el enfoque que mejor encaje con tu objetivo, tu nivel y tu tiempo."]]},
-{i:"tipod",k:"x",q:"¿Alguno que ya hayas probado o que te llame la atención?",p:"Opcional"}]},
 {e:"📅",t:"Tu",s:"semana",d:"Montamos el plan con tu tiempo real.",q:[
 {i:"dias",k:"c",q:"¿Cuántos días a la semana puedes entrenar?",o:["1","2","3","4","5","6"],r:1},
 {i:"dur",k:"c",q:"¿Cuánto tiempo tienes por sesión?",o:["30 min","45 min","60 min","90 min o más"]},
@@ -695,7 +665,6 @@ function cueSt(){const Q=S.q;if(Q&&Q.done)return"Completado ✓";if(Q&&Q.a&&Obje
 function qQ(q,a){const v=a[q.i];let h=`<div class="qq"><label>${esc(q.q)}${q.r?" *":""}</label>`;
 if(q.k==="c"||q.k==="m")h+=`<div class="qch">${q.o.map((x,k)=>`<button class="qc${(q.k==="m"?(v||[]).includes(x):v===x)?" on":""}" data-q="${q.k}" data-id="${q.i}" data-v="${k}">${esc(x)}</button>`).join("")}</div>`;
 else if(q.k==="r")h+=`<div class="qch qr">${Array.from({length:q.n},(_,k)=>`<button class="qc${v===String(k+1)?" on":""}" data-q="r" data-id="${q.i}" data-v="${k}">${k+1}</button>`).join("")}</div><div class="qrl"><small>${esc(q.lo)}</small><small>${esc(q.hi)}</small></div>`;
-else if(q.k==="d")h+=`<div class="qd">${q.o.map((x,k)=>`<button class="qdc${(v||[]).includes(x[0])?" on":""}" data-q="m" data-id="${q.i}" data-v="${k}"><b>${esc(x[0])}</b><span>${esc(x[1])}</span></button>`).join("")}</div>`;
 else if(q.k==="n")h+=`<div class="qn"><input type="number" inputmode="decimal" data-qi="${q.i}" value="${esc(v)}"><span>${esc(q.u||"")}</span></div>`;
 else if(q.k==="t")h+=`<input data-qi="${q.i}" value="${esc(v)}">`;
 else h+=`<textarea data-qi="${q.i}" placeholder="${esc(q.p||"")}">${esc(v)}</textarea>`;
@@ -703,32 +672,18 @@ return h+"</div>"}
 function qAct(a,id,k){S.q=S.q||{a:{},step:-1};const Q=S.q,N=QS.length;
 if(a==="start"||a==="edit"){Q.step=0;qmsg=""}else if(a==="prev"){Q.step=Math.max(0,Q.step-1);qmsg=""}
 else if(a==="next"||a==="fin"){const m=qMiss(QS[Q.step],Q.a);if(m.length){qmsg="Responde las preguntas marcadas con * para continuar.";return}qmsg="";if(a==="fin"){Q.done=Date.now();Q.step=N}else Q.step++}
-else{const q=QI[id];if(!q)return;if(a==="c")Q.a[id]=q.o[k];else if(a==="r")Q.a[id]=String(k+1);else if(a==="m"){const x=Array.isArray(q.o[k])?q.o[k][0]:q.o[k],c=Q.a[id]||[],EX=y=>y==="Ninguna"||y==="Nada"||y==="Ninguno"||y.indexOf("No lo sé")===0;let r=EX(x)?(c.includes(x)?[]:[x]):(c.includes(x)?c.filter(y=>y!==x):c.filter(y=>!EX(y)).concat(x));if(q.k==="d"&&r.length>3)r=r.slice(-3);Q.a[id]=r}}}
+else{const q=QI[id];if(!q)return;if(a==="c")Q.a[id]=q.o[k];else if(a==="r")Q.a[id]=String(k+1);else if(a==="m"){const x=q.o[k],c=Q.a[id]||[],ex=x==="Ninguna"||x==="Nada"||x==="Ninguno";Q.a[id]=ex?(c.includes(x)?[]:[x]):(c.includes(x)?c.filter(y=>y!==x):c.filter(y=>y!=="Ninguna"&&y!=="Nada"&&y!=="Ninguno").concat(x))}}}
 function cueSum(){const Q=S.q,a=(Q&&Q.a)||{};if(!Object.keys(a).length)return'<div class="empty">El cliente aún no ha empezado el cuestionario. Se lo recuerda un aviso en su menú.</div>';
 const F=[],has=k=>(a[k]||[]).some(x=>x!=="Ninguna"&&x!=="Ninguno");if(has("les"))F.push("Lesiones: "+a.les.join(", ")+(a.lesd?" — "+a.lesd:""));if(has("med"))F.push("Condiciones médicas: "+a.med.join(", ")+(a.med2?" ("+a.med2+")":""));if(["pq1","pq2","pq3"].some(k=>a[k]==="Sí"))F.push("Ha respondido «Sí» en las preguntas de seguridad (PAR-Q). Valora pedir visto bueno médico antes de entrenar.");if(has("aler"))F.push("Alergias o intolerancias: "+a.aler.join(", "));
 const st=Q.done?"Completado el "+new Date(Q.done).toLocaleDateString("es-ES"):"En curso · paso "+(Math.min(Math.max(Q.step,0),QS.length-1)+1)+" de "+QS.length;
-const R=[["Objetivo",a.obj],["Plazo",a.plazo],["Días/semana",a.dias],["Duración",a.dur],["Nivel",a.nivel],["Estilo",(a.tipo||[]).join(", ")]].filter(x=>x[1]).map(x=>`<div class="tile"><small>${x[0]}</small><b>${esc(x[1])}</b></div>`).join("");
+const R=[["Objetivo",a.obj],["Plazo",a.plazo],["Días/semana",a.dias],["Duración",a.dur],["Nivel",a.nivel]].filter(x=>x[1]).map(x=>`<div class="tile"><small>${x[0]}</small><b>${esc(x[1])}</b></div>`).join("");
 return`<div class="card"><b>Cuestionario inicial</b><br><small>${st}</small></div>${F.length?`<div class="card" style="border-top-color:#86222f"><b>⚠️ Revisar antes de planificar</b>${F.map(x=>`<div class="qa"><span style="text-align:left;font-weight:500;color:#1a1a1c">${esc(x)}</span></div>`).join("")}</div>`:""}${R?`<div class="card"><b>Resumen rápido</b><div class="grid" style="margin-top:8px">${R}</div></div>`:""}`+QS.map(t=>{const rows=qvis(t,a).map(q=>`<div class="qa"><span>${esc(q.q)}</span><span>${esc(qShow(q,a[q.i]))}</span></div>`).join("");return`<div class="card"><b>${t.e} ${t.t} ${t.s}</b>${rows}</div>`}).join("")}
-function cueH(){return ROLE!=="client"?cueSum():cueH0()+ydFoot()}
-const ydFoot=()=>`<div class="yf"><small>¿Hablamos?</small><div class="yfl"><a href="https://www.instagram.com/ydperform?dlrf=MXRpcDFlcmd5bXd2dg%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener">📸 Instagram</a><a href="https://youtube.com/@ydperform?si=-NDtctyH2EiahR1c" target="_blank" rel="noopener">▶️ YouTube</a><a href="tel:620814482">📞 620 81 44 82</a></div></div>`;
-function cueH0(){const Q=S.q||{a:{},step:-1},N=QS.length,n=((S.prof||{}).n||(CL||{}).name||"").split(" ")[0];
-if(Q.step<0)return`<div class="hero"><small>CUESTIONARIO INICIAL</small><div class="hh">Vamos a conocerte</div><div class="script">en menos de 10 minutos</div></div><div class="card"><b>Qué te espera</b><div class="qa"><span>Pantallas</span><span>${N} rápidas</span></div><div class="qa"><span>Duración</span><span>7-10 min</span></div><div class="qa"><span>Cómo se responde</span><span>Casi todo con un toque</span></div><small style="display:block;margin-top:8px">Se guarda solo: puedes parar y seguir cuando quieras. Con tus respuestas prepararé un plan hecho a tu medida.</small></div><button class="w" data-q="start" style="width:100%;padding:14px">Empezar</button>`;
+function cueH(){if(ROLE!=="client")return cueSum();const Q=S.q||{a:{},step:-1},N=QS.length,n=((S.prof||{}).n||(CL||{}).name||"").split(" ")[0];
+if(Q.step<0)return`<div class="hero"><small>CUESTIONARIO INICIAL</small><div class="hh">Vamos a conocerte</div><div class="script">en menos de 10 minutos</div></div><div class="card"><b>Qué te espera</b><div class="qa"><span>Pantallas</span><span>${N} rápidas</span></div><div class="qa"><span>Duración</span><span>6-9 min</span></div><div class="qa"><span>Cómo se responde</span><span>Casi todo con un toque</span></div><small style="display:block;margin-top:8px">Se guarda solo: puedes parar y seguir cuando quieras. Con tus respuestas prepararé un plan hecho a tu medida.</small></div><button class="w" data-q="start" style="width:100%;padding:14px">Empezar</button>`;
 if(Q.step>=N)return`<div class="hero"><small>¡LISTO!</small><div class="hh">Gracias${n?", "+esc(n):""}</div><div class="script">ya te conozco mejor</div></div><div class="card"><small>Tu entrenador ya tiene todo lo necesario para preparar tu plan. Si algo cambia, puedes editar tus respuestas cuando quieras.</small></div><div class="bar"><button class="on" data-act="tab" data-v="menu">Volver al menú</button><button data-q="edit">Editar respuestas</button></div>`;
 const t=QS[Q.step];return`<div class="qtop"><small>PASO ${Q.step+1} DE ${N}</small><div class="pb" style="margin-top:6px"><i style="width:${Math.round((Q.step+1)/N*100)}%"></i></div></div><div class="sec" style="margin:16px 0 4px">${t.e} ${t.t} <span class="script">${t.s}</span></div><small style="display:block;margin-bottom:10px;color:#b9b2a6">${t.d}</small><div class="card">${qvis(t,Q.a).map(q=>qQ(q,Q.a)).join("")}${qmsg?`<div class="qmsg">${qmsg}</div>`:""}</div><div class="qnav">${Q.step>0?'<button data-q="prev">‹ Atrás</button>':""}<button class="w" data-q="${Q.step===N-1?"fin":"next"}">${Q.step===N-1?"Enviar ✓":"Siguiente ›"}</button></div>`}
 document.addEventListener("click",ev=>{const b=ev.target.closest("[data-q]");if(!b||ROLE!=="client")return;const a=b.dataset.q,nav=["start","edit","prev","next","fin"].includes(a);qAct(a,b.dataset.id,+b.dataset.v);save();render();if(nav)window.scrollTo(0,0)});
 document.addEventListener("input",ev=>{const t=ev.target;if(!t.dataset||t.dataset.qi===undefined||ROLE!=="client")return;ev.stopPropagation();S.q=S.q||{a:{},step:-1};S.q.a[t.dataset.qi]=t.value;clearTimeout(qT);qT=setTimeout(save,700)},true);
-const tmOpen=new Set();let tfT=0;
-function tmH(t,L,ms){if(!L.length)return"";const rows=L.map((e,i)=>[e,i]).reverse().map(([e,i])=>{const m=e.m||[],id=t.id+"|"+i;return`<div class="tmr"><div class="row"><b>${esc(e.d)}</b><span>${fmtU(ms[i],t.u)}</span></div>${m.length?`<div class="tmg">${m.map((x,k)=>`<div class="tmi">${x.k==="video"?`<video src="${esc(x.u)}" controls playsinline preload="metadata"></video>`:`<a href="${esc(x.u)}" target="_blank" rel="noopener"><img src="${esc(x.u)}" alt="" loading="lazy"></a>`}<button class="x" data-tmx="${id}|${k}">✕ Quitar</button></div>`).join("")}</div>`:""}<label class="tmb"><input type="file" accept="image/*,video/*" data-tm="${id}" hidden>📎 Añadir vídeo o foto</label>${ROLE==="coach"?`<textarea data-tfb="${id}" placeholder="Tu valoración del movimiento…">${esc(e.fb||"")}</textarea>`:(e.fb?`<div class="tmf"><b>Valoración de tu entrenador</b><br>${esc(e.fb)}</div>`:"")}</div>`}).join("");
-return`<details class="tmd" data-tid="${t.id}"${tmOpen.has(t.id)?" open":""}><summary>📹 Vídeos, fotos y valoración (${L.length})</summary><small>Sube un vídeo o foto de tu ejecución en cada registro para que tu entrenador pueda evaluar el movimiento. Máx. 25 MB por vídeo (unos 15-20 s).</small>${rows}</details>`}
-async function tmUp(f){const ct=(f.type||"").split(";")[0],img=ct.indexOf("image")===0,vid=ct.indexOf("video")===0;if(!img&&!vid){alert("Solo se admiten fotos o vídeos.");return null}if(vid&&f.size>26214400){alert("El vídeo pesa más de 25 MB. Grábalo más corto (unos 15-20 s) o con menos calidad.");return null}
-let body=f,type=ct,ext=(ct.split("/")[1]||"bin").replace("quicktime","mov");if(img){body=await imgBlob(f,1280);type="image/jpeg";ext="jpg"}
-const p="tests/"+Date.now()+"_"+uid()+"."+ext,{error}=await SB.storage.from("chat").upload(p,body,{contentType:type});if(error)throw error;return{u:SB.storage.from("chat").getPublicUrl(p).data.publicUrl,k:img?"image":"video"}}
-const tmE=(id,i)=>((S.tests||{})[id]||[])[i];
-document.addEventListener("toggle",ev=>{const d=ev.target;if(d.classList&&d.classList.contains("tmd")){d.open?tmOpen.add(d.dataset.tid):tmOpen.delete(d.dataset.tid)}},true);
-document.addEventListener("change",async ev=>{const t=ev.target;if(!t.dataset||t.dataset.tm===undefined)return;ev.stopPropagation();const f=t.files[0];t.value="";if(!f)return;const q=t.dataset.tm.split("|"),e0=tmE(q[0],+q[1]);if(!e0)return;const d0=e0.d,v0=e0.v;
-try{setStat("Subiendo…");const m=await tmUp(f);setStat("");if(!m)return;const e=((S.tests||{})[q[0]]||[]).find(x=>x.d===d0&&x.v===v0);if(!e)return;(e.m=e.m||[]).push(m);tmOpen.add(q[0]);save();render()}catch(x){setStat("");alert("No se pudo subir: "+(x.message||x))}},true);
-document.addEventListener("click",ev=>{const b=ev.target.closest("[data-tmx]");if(!b)return;const q=b.dataset.tmx.split("|"),e=tmE(q[0],+q[1]);if(!e||!e.m||!confirm("¿Quitar este archivo?"))return;e.m.splice(+q[2],1);save();render()});
-document.addEventListener("input",ev=>{const t=ev.target;if(!t.dataset||t.dataset.tfb===undefined||ROLE!=="coach")return;ev.stopPropagation();const q=t.dataset.tfb.split("|"),e=tmE(q[0],+q[1]);if(e){e.fb=t.value;clearTimeout(tfT);tfT=setTimeout(save,700)}},true);
 let LIB=[],libOk=false,libBusy=false,libErr="",libT="rec",libQ="",LBid="";
 const KD={rec:"recipe",ex:"exercise"};
 async function libLoad(){if(ROLE!=="coach"||libBusy)return;libBusy=true;try{const r=await SB.from("library").select("id,kind,name,data").order("name");if(r.error)throw r.error;LIB=r.data||[];libOk=true;libErr=""}catch(e){libErr=e.message||String(e)}libBusy=false;render()}
