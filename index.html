@@ -809,6 +809,15 @@ function mailH(){$("app").innerHTML=`<div class="hero"><small>BIENVENIDO</small>
 const mailCard=()=>CLI()?`<div class="card"><b>Correo electrónico</b><br><small>Aquí recibirás los avisos de mensajes y actualizaciones.</small><label>Correo</label>${mlIn("acml",(S.prof||{}).email)}<p id="mlmsg" class="qmsg"></p><button class="on" data-ml="acc">Guardar correo</button></div>`:(ROLE==="coach"&&CL?`<div class="card"><b>Correo del cliente</b><br><small>${esc((S.prof||{}).email||"Aún no ha indicado su correo")}</small></div>`:"");
 document.addEventListener("input",ev=>{if(ev.target.dataset&&ev.target.dataset.mli!==undefined)ev.stopPropagation()},true);
 document.addEventListener("click",ev=>{const b=ev.target.closest("[data-ml]");if(!b||!CLI())return;const g=b.dataset.ml==="gate",i=$(g?"mlin":"acml"),v=((i||{}).value||"").trim().toLowerCase(),m=$("mlmsg");if(!okMail(v)){if(m)m.textContent="Escribe un correo válido, por ejemplo nombre@gmail.com";return}S.prof=S.prof||{};S.prof.email=v;save();render();if(!g){setStat("Correo actualizado ✓");setTimeout(()=>setStat(""),2500)}});
+let gSk={};
+const gYd=()=>{const d=new Date();d.setDate(d.getDate()-1);return ymd(d)};
+function gateNext(){if(!S.gs0){S.gs0=today;setTimeout(save,0)}
+const rc=S.rec||{};if(!gSk.ci&&!(rc[today]||{}).saved)return"ci";
+const ry=rc[gYd()]||{};if(!gSk.hb&&(gSk.hbOn||(S.gs0<today&&(S.habits||[]).length&&!ry.hs&&!S.habits.some(h=>hdone(h,{h:ry.h||{}}))))){gSk.hbOn=true;return"hb"}return""}
+function gateH(g){$("who").innerHTML="";const y=gYd();rd=g==="ci"?today:y;const p=recH().split("<!--S-->"),nm=((S.prof||{}).n||(CL||{}).name||"").split(" ")[0];
+const top=g==="ci"?`<div class="hero"><small>BUENOS DÍAS${nm?", "+esc(nm).toUpperCase():""}</small><div class="hh">Tu readiness</div><div class="script">cómo has despertado hoy</div></div><div class="card"><small>Tarda menos de un minuto y me ayuda a ajustar tu entrenamiento de hoy.</small></div>`:`<div class="hero"><small>${new Date(y+"T00:00").toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"}).toUpperCase()}</small><div class="hh">Hábitos de ayer</div><div class="script">aún estás a tiempo</div></div><div class="card"><small>Ayer no los rellenaste. Márcalos ahora para no perder tu racha.</small></div>`;
+$("app").innerHTML=top+(g==="ci"?p[3]:p[2])+`<div class="qnav">${g==="hb"?'<button class="w" data-g="hbdone">Guardar y continuar</button>':""}<button data-g="skip" data-v="${g}">Ahora no</button></div>`}
+document.addEventListener("click",ev=>{const b=ev.target.closest("[data-g]");if(!b||!CLI())return;const a=b.dataset.g;if(a==="skip")gSk[b.dataset.v]=true;else if(a==="hbdone"){rd=gYd();R().hs=true;gSk.hb=true}rd=today;save();render();window.scrollTo(0,0)});
 let LIB=[],libOk=false,libBusy=false,libErr="",libT="rec",libQ="",LBid="";
 const KD={rec:"recipe",ex:"exercise"};
 async function libLoad(){if(ROLE!=="coach"||libBusy)return;libBusy=true;try{const r=await SB.from("library").select("id,kind,name,data").order("name");if(r.error)throw r.error;LIB=r.data||[];libOk=true;libErr=""}catch(e){libErr=e.message||String(e)}libBusy=false;render()}
@@ -887,7 +896,7 @@ function render(){const m=tab==="menu";if(ROLE==="coach"&&!CL&&tab!=="chat"&&tab
 $("who").innerHTML=!USER||!ready?"":m?(ROLE==="coach"&&CL?'<button data-act="cList">‹ Clientes</button>':""):tab==="cli"?"":'<button data-act="tab" data-v="menu">‹ Menú</button>';
 if(!ready){$("app").innerHTML='<div class="empty">Cargando…</div>';return}
 if(cfgBad()){$("app").innerHTML='<div class="card"><b>Falta conectar la base de datos</b><br><small>Pega tu URL y tu clave de Supabase en SUPA_URL y SUPA_KEY, al principio del script de este archivo.</small></div>';return}
-if(!USER){loginH();return}if(CLI()&&S&&!okMail((S.prof||{}).email)){mailH();return}
+if(!USER){loginH();return}if(CLI()&&S&&!okMail((S.prof||{}).email)){mailH();return}if(CLI()&&S){const g=gateNext();if(g){gateH(g);return}}
 $("app").innerHTML=tab==="cli"?cliH():m?menuH():(TT[tab]?'<div class="sec" style="margin-top:4px">'+TT[tab][0]+' <span class="script">'+TT[tab][1]+'</span></div>':"")+{ini:iniH,ent:entH,cal:calH,car:carH,rec:recH2,tst:tstH2,pro:progH,chat:chatH,nut:nutH,rev:revH,acc:accH,lib:libH,cue:cueH,apx:apxH}[tab]()}
 
 document.addEventListener("click",ev=>{const t=ev.target.closest("[data-act]");if(!t)return;const a=t.dataset.act,v=t.dataset.v,s=cur();if(["cLogin","logout","cOpen","cNew","cList","cDel","wa","cp","cSend","cDelMsg","mic","pick"].includes(a)){cact(a,v);return}
