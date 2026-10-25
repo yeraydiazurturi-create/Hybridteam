@@ -269,6 +269,18 @@ details.card summary{cursor:pointer;margin-bottom:6px}
 .crw.on{background:#efe3cb;border-color:var(--wine)}.crn{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid #cdc5b6;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
 .crw.on .crn{background:var(--wine);color:var(--white);border-color:transparent}
 .mt i:empty{display:none}
+
+.mcal{background:linear-gradient(135deg,#221b1d 0,#131314 100%);border:1px solid rgba(255,255,255,.07);border-top:3px solid var(--ember);border-radius:10px;padding:14px 10px 10px;margin-bottom:12px;cursor:pointer}
+.mcal .row{padding:0 4px 8px}.mcal .row b{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-stretch:88%;font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:16px;color:var(--white)}
+.mgo{color:var(--champ);font-size:13px;font-weight:600}
+.mcal .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.mcal .wd{color:var(--champ);font-size:11px;text-align:center;letter-spacing:.1em;font-weight:700;padding:2px 0 4px}
+.mcd{text-align:center;padding:7px 0 5px;border-radius:8px;color:var(--white);min-height:42px}.mcd b{display:block;font-weight:500;font-size:14px}
+.mcd:active{background:rgba(220,199,161,.12)}
+.mcd.td{background:var(--ember);color:#17120f}.mcd.td b{font-weight:800}
+.mdots{display:flex;justify-content:center;gap:3px;margin-top:4px;height:6px}
+.mdots i{width:6px;height:6px;border-radius:50%;border:1px solid var(--champ);display:block;box-sizing:border-box}.mdots i.dn{background:var(--champ)}
+.mcd.td .mdots i{border-color:#17120f}.mcd.td .mdots i.dn{background:#17120f}
 </style>
 </head>
 <body>
@@ -454,9 +466,11 @@ const TABS=[["ini","Inicio"],["ent","Entrenos"],["cal","Calendario"],["car","Car
 const mt=(a,v,n,t,x,w)=>`<button class="mt${w?" wide":""}" data-act="${a}" data-v="${v}"><i>${n}</i><span><b>${t}</b><small>${x}</small></span></button>`;
 function ydi(){const at=allT(),v=["Velocidad","Fuerza","Resistencia","Soporte"].map(p=>{const x=at.filter(t=>t.p===p).map(tsc).filter(y=>y!=null);return x.length?x.reduce((a,b)=>a+b)/x.length:null}).filter(y=>y!=null);return v.length?Math.round(v.reduce((a,b)=>a+b)/v.length):null}
 function menuH(){const P=S.prof||{},wl=wkI("load").pop(),y=ydi(),rc=S.rec[today],cmp=(a,b)=>a.date<b.date?-1:1,ss=S.sessions.filter(x=>x.date===today),hs=ss.find(x=>!x.done)||ss[0]||S.sessions.filter(x=>!x.done&&x.date>today).sort(cmp)[0],fd=d=>d.slice(8)+"/"+d.slice(5,7),nn=(NT.squad||0)+(NT.priv||0),co=ROLE==="coach";
-const hoy=hs?`<div class="hoy"><small>${hs.date===today?"HOY":"PRÓXIMO · "+fd(hs.date)}</small><div class="hoyt">${esc(hs.name)}</div><div class="hoys">${hs.ex.length?hs.ex.length+" ejercicio"+(hs.ex.length>1?"s":""):"Sesión libre"}${hs.total?" · "+esc(hs.total)+" min":""}${hs.done?" · Completada ✓":""}</div><button class="w" data-act="openS" data-v="${hs.id}">${co?"Abrir sesión":hs.done||hs.date!==today?"Ver sesión":"Empezar"}</button></div>`:`<div class="hoy"><small>HOY</small><div class="hoyt">Sin sesión planificada</div><div class="hoys">Día de descanso o aún por planificar.</div><button class="w" data-act="tab" data-v="ent">Ver entrenos</button></div>`;
+const cal=(()=>{const d0=new Date(),y=d0.getFullYear(),mo=d0.getMonth(),off=(new Date(y,mo,1).getDay()+6)%7,n=new Date(y,mo+1,0).getDate();let c="LMXJVSD".split("").map(d=>`<div class="wd">${d}</div>`).join("");for(let i=0;i<off;i++)c+="<div></div>";
+for(let d=1;d<=n;d++){const k=ymd(new Date(y,mo,d)),q=S.sessions.filter(x=>x.date===k);c+=`<div class="mcd${k===today?" td":""}" data-mc="${k}"><b>${d}</b><span class="mdots">${q.slice(0,3).map(x=>`<i class="${x.done?"dn":""}"></i>`).join("")}</span></div>`}
+return`<div class="mcal" data-mc=""><div class="row"><b>${d0.toLocaleDateString("es-ES",{month:"long",year:"numeric"})}</b><span class="mgo">${co?"Organizar":"Ver calendario"} ›</span></div><div class="cal">${c}</div></div>`})();
 const qk=(v,t,b)=>`<button class="qk" data-act="tab" data-v="${v}"><b>${t}</b>${b?`<em>${b}</em>`:""}</button>`;
-return `<div class="hero"><small style="color:#ccc;letter-spacing:.25em">PERFIL DEL ATLETA</small><div class="hh">${esc(P.n||"Tu nombre")}</div><div class="script">${esc(P.o||"rendimiento atlético")}</div></div>${hoy}<div class="qrow">${qk("ent","Entrenos")}${qk("nut","Nutrición")}${qk("chat","Chat",nn||"")}${qk("cal","Calendario")}</div>${ntfH()}${shareH()}<div class="mhd">MÁS</div><div class="menu">`+
+return `<div class="hero"><small style="color:#ccc;letter-spacing:.25em">PERFIL DEL ATLETA</small><div class="hh">${esc(P.n||"Tu nombre")}</div><div class="script">${esc(P.o||"rendimiento atlético")}</div></div>${cal}<div class="qrow">${qk("ent","Entrenos")}${qk("nut","Nutrición")}${qk("chat","Chat",nn||"")}${qk("cal","Calendario")}</div>${ntfH()}${shareH()}<div class="mhd">MÁS</div><div class="menu">`+
 mt("tab","ana","","Analizador",anaSub(),1)+(S.hyOn||co?mt("tab","apx","","Hybrid Test",S.hyOn?apxSub():"Desactivado para este cliente",1):"")+mt("tab","ini","","Inicio","Perfil y resumen")+mt("tab","car","","Carga",(wl?Math.round(wl.v):0)+" UA esta semana")+mt("tab","rec","","Recovery",rc&&rc.saved?"Readiness "+rc.ci.score:"Check-in pendiente")+mt("tab","tst","","Tests",y==null?"Sin datos":"Índice YD "+y)+mt("tab","pro","","Progreso","Cargas por ejercicio")+mt("tab","rev","","Revisión semanal",rvPend()?"Pendiente · viernes":"Peso y fotos")+mt("tab","cue","","Cuestionario",cueSt())+mt("tab","acc","","Cuenta",esc(USER))+"</div>"}
 function recH2(){const p=recH().split("<!--S-->");
 if(!rs)return '<div class="menu">'+mt("rsub","hab","01","Hábitos","Racha y diario")+mt("rsub","ci","02","Check-in","Sueño, fatiga, ánimo")+mt("rsub","mov","03","Movilidad","Rutinas y estiramientos")+mt("rsub","spa","04","Circuito termal","Sauna, frío, turco, natación")+mt("rsub","gr","05","Gráficos","Evolución",1)+"</div>";
@@ -899,6 +913,7 @@ else if(a==="go"){const sel=crt.s.map(id=>LIB.find(x=>x.id===id)).filter(Boolean
 const s={id:uid(),name:(crt.n||"").trim()||"Fuerza "+(S.sessions.length+1),date:crt.d||today,total:"",rpe:"",done:false,type:"fuerza",ex:sel.map(x=>{const e=Object.assign(newEx(),JSON.parse(JSON.stringify(x.data)),{id:uid()});delete e.ss;delete e.cat;return e})};
 S.sessions.unshift(s);S.cur=s.id;S.pu=Date.now();crt={n:"",d:"",s:[],q:"",c:""};et="fuerza";tab="ent";entV="edit";save();render();window.scrollTo(0,0);return}
 const l=$("crtlist"),f=$("crtft"),c=$("crtch");if(l)l.innerHTML=crtRows();if(f)f.innerHTML=crtFoot();if(c)c.innerHTML=crtCh()});
+document.addEventListener("click",ev=>{const b=ev.target.closest("[data-mc]");if(!b)return;const k=b.dataset.mc;if(k){selDay=k;cm=new Date(k+"T00:00")}else{selDay=today;cm=new Date()}tab="cal";render();window.scrollTo(0,0)});
 let LIB=[],libOk=false,libBusy=false,libErr="",libT="rec",libQ="",LBid="";
 const KD={rec:"recipe",ex:"exercise"};
 async function libLoad(){if(ROLE!=="coach"||libBusy)return;libBusy=true;try{const r=await SB.from("library").select("id,kind,name,data").order("name");if(r.error)throw r.error;LIB=r.data||[];libOk=true;libErr=""}catch(e){libErr=e.message||String(e)}libBusy=false;render()}
